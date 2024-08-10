@@ -3,7 +3,7 @@ name: Pull request
 on: [pull_request]
 
 jobs:
-  test:
+  pr:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
