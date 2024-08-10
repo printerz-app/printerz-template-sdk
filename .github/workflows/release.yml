@@ -1,0 +1,26 @@
+name: Release 📦
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "checkout"
+        uses: actions/checkout@v2
+      
+      - name: "install"
+        run: pnpm install
+              
+      - name: "lint"
+        run: pnpm check
+      
+      - name: "build"
+        run: pnpm build
+      
+      - name: "publish"
+        run: pnpm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
