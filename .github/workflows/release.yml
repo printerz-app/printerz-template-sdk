@@ -8,19 +8,32 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: "checkout"
+      - name: "Checkout"
         uses: actions/checkout@v2
+
+      - name: "Install pnpm"
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+          run_install: false
+
+      - name: "Install Node.js"
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
       
-      - name: "install"
-        run: pnpm install
+      - name: "Install dependencies"
+        run: pnpm install --frozen-lockfile
               
-      - name: "lint"
+      - name: "Lint"
         run: pnpm check
       
-      - name: "build"
+      - name: "Build"
         run: pnpm build
       
-      - name: "publish"
-        run: pnpm publish
+      - name: "Publish"
+        run: pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
