@@ -17,10 +17,11 @@ export const setup = () => {
 	};
 };
 
+
+
 export const onRender = <T extends Record<string, unknown>>(
 	callback: (variables: T) => void,
-	{ once = false } = {},
-) => {
+): { register: () => void, unregister: () => void } => {
 	const handler = async (event: CustomEvent<Record<string, unknown>>) => {
 		await Promise.resolve(callback(event.detail as T));
 		window.dispatchEvent(
@@ -28,9 +29,12 @@ export const onRender = <T extends Record<string, unknown>>(
 		);
 	};
 
-	window.addEventListener("printerz-render", handler, { once });
-
-	return () => {
-		window.removeEventListener("printerz-render", handler);
+	return{
+		register: () => {
+			window.addEventListener("printerz-render", handler);
+		},
+		unregister: () => {
+			window.removeEventListener("printerz-render", handler);
+		}
 	};
 };
